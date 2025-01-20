@@ -54,9 +54,9 @@ class StockTradingApp:
         self.sell_button = tk.Button(self.action_frame, text="Sell", font=("Arial", 14), command=self.sell_stock)
         self.sell_button.grid(row=0, column=3, padx=20)
 
-        # Portfolio display
-        self.portfolio_button = tk.Button(self.root, text="View Portfolio", font=("Arial", 14), command=self.view_portfolio)
-        self.portfolio_button.pack(pady=20)
+        # Portfolio display (show number of shares directly)
+        self.shares_label = tk.Label(self.root, text=f"MEOW Shares: {self.portfolio['MEOW']}", font=("Arial", 14))
+        self.shares_label.pack(pady=20)
 
         # Plot the graph
         self.plot_frame = tk.Frame(self.root)
@@ -82,6 +82,7 @@ class StockTradingApp:
         self.balance -= total_cost
         self.portfolio["MEOW"] += quantity
         self.update_balance()  # Update the balance on the GUI
+        self.update_shares()  # Update the shares on the GUI
         messagebox.showinfo("Success", f"Bought {quantity} shares of MEOW for ${total_cost}.")
 
     def sell_stock(self):
@@ -102,13 +103,11 @@ class StockTradingApp:
         self.portfolio["MEOW"] -= quantity
 
         self.update_balance()  # Update the balance on the GUI
+        self.update_shares()  # Update the shares on the GUI
         messagebox.showinfo("Success", f"Sold {quantity} shares of MEOW for ${total_revenue}.")
 
-    def view_portfolio(self):
-        portfolio_str = f"MEOW: {self.portfolio['MEOW']} shares"
-        if self.portfolio["MEOW"] == 0:
-            portfolio_str = "Your portfolio is empty."
-        messagebox.showinfo("Portfolio", portfolio_str)
+    def update_shares(self):
+        self.shares_label.config(text=f"MEOW Shares: {self.portfolio['MEOW']}")
 
     def update_prices(self):
         # Introduce a 5% chance for larger fluctuations (70% to 130%)
